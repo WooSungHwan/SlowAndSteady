@@ -8,15 +8,54 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import static java.util.Comparator.comparing;
 
 public class Main {
 
-    public static void main(String[] args) {
+    static int k = Integer.MAX_VALUE;
 
-        appleExample();
+    public static void main(String[] args) throws Exception{
+        synchronizedMainExample();
+        //appleExample();
 
+    }
+
+    private static void synchronizedMainExample() throws InterruptedException {
+        ExecutorService service = Executors.newFixedThreadPool(3);
+
+        service.submit(() -> {
+            long start = System.currentTimeMillis();
+            synchronizedExample();
+            long end = System.currentTimeMillis();
+            System.out.println(end - start);
+        });
+
+        service.submit(() -> {
+            long start = System.currentTimeMillis();
+            nonSynchronizedExample();
+            long end = System.currentTimeMillis();
+            System.out.println(end - start);
+        });
+        service.shutdownNow();
+    }
+
+    private static void synchronizedExample() {
+        for (int i = 0; i < 100000000; i++) {
+            int newK = SynchronizedKeyowrdExample.getK() - 1;
+            SynchronizedKeyowrdExample.setK(newK);
+        }
+    }
+
+    private static void nonSynchronizedExample() {
+        for (int i = 0; i < 100000000; i++) {
+            int newK = NonSynchronizedKeywordExample.getK() - 1;
+            NonSynchronizedKeywordExample.setK(newK);
+        }
     }
 
     private static void appleExample() {
