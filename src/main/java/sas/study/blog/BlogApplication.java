@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import sas.study.blog.configuration.PostgresProperties;
 
-@EnableConfigurationProperties({PostgresProperties.class})
+@EnableConfigurationProperties(value = {PostgresProperties.class})
 @SpringBootApplication
 public class BlogApplication {
 
