@@ -4,25 +4,46 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
 
+/**
+ * 모던 자바 인 액션을 읽으면서 예제 짜보는 클래스
+ */
 public class Main {
 
     static int k = Integer.MAX_VALUE;
 
     public static void main(String[] args) throws Exception{
-        synchronizedMainExample();
-        //appleExample();
+//        synchronizedMainExample();
+//        appleExample();
+            appleLambdaPredicateExample();
+    }
 
+    /**
+     * Lambda 표현식을 통해 Predicate를 던져서 필터링 해보기
+     */
+    private static void appleLambdaPredicateExample() {
+        List<Apple> apples = Apple.toList(100, 150, 60, 20, 130, 140);
+
+        // 원본에는 영향 x
+        Predicate<Apple> productPredicate = apple -> apple.getWeight() >= 100;
+        List<Apple> product = filter(apples, productPredicate);// 사과무게 100 이상
+
+        Predicate<Apple> trashPredicate = apple -> apple.getWeight() < 100;
+        List<Apple> trash = filter(apples, trashPredicate);// 사과무게 100 미만
+
+        System.out.println(product.toString());
+        System.out.println(trash.toString());
+    }
+
+    private static List<Apple> filter(List<Apple> apples, Predicate<Apple> applePredicate) {
+        return apples.stream().filter(apple -> applePredicate.test(apple)).collect(Collectors.toList());
     }
 
     private static void synchronizedMainExample() throws InterruptedException {
@@ -59,14 +80,7 @@ public class Main {
     }
 
     private static void appleExample() {
-        List<Apple> apples = Arrays.asList(
-                new Apple(1),
-                new Apple(2),
-                new Apple(3),
-                new Apple(9),
-                new Apple(5),
-                new Apple(4)
-        );
+        List<Apple> apples = Apple.toList(1,5,7,2,3,6);
 
         // 기존 자바 7이하에서의 정렬
         Collections.sort(apples, new Comparator<Apple>() {
@@ -79,14 +93,7 @@ public class Main {
         // 정렬 확인
         System.out.println(apples);
 
-        apples = Arrays.asList(
-                new Apple(1),
-                new Apple(2),
-                new Apple(3),
-                new Apple(9),
-                new Apple(5),
-                new Apple(4)
-        );
+        apples = Apple.toList(1,5,7,2,3,6);
 
         // 자바 8 이후의 정렬
         apples.sort(comparing(Apple::getWeight));
@@ -101,6 +108,15 @@ public class Main {
     static
     class Apple {
         Integer weight;
+
+        public static List<Apple> toList(Integer... weight) {
+            List<Apple> apples = new ArrayList<>(weight.length);
+            for (Integer i : weight) {
+                apples.add(new Apple(i));
+            }
+            return apples;
+        }
+
     }
 
 }
