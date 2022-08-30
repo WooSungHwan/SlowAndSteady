@@ -1,15 +1,18 @@
 package sas.study.blog.spring.di.field;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class FieldInjectionService {
 
-    @Autowired
-    private FieldInjectionController fieldInjectionController;
+//    private final FieldInjection2Service fieldInjection2Service;
 
-    public void fieldInjection() {
-        System.out.println("fieldInjectionService.fieldInjection() 호출");
+    public int doSomething() {
+        System.out.println("fieldInjectionService.doSomething() 호출");
+        return 0;
+//        return fieldInjection2Service.doSomething();
     }
 }

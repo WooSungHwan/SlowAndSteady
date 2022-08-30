@@ -9,13 +9,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class FieldInjectionController {
 
-    @Autowired
     private FieldInjectionService fieldInjectionService;
+
+    @Autowired
+    public void setFieldInjectionService(FieldInjectionService fieldInjectionService) {
+        this.fieldInjectionService = fieldInjectionService;
+    }
 
     @GetMapping("/field-injection")
     public String fieldInjection() {
-        fieldInjectionService.fieldInjection();
-        return "fieldInjection";
+        int result = fieldInjectionService.doSomething();
+        return "fieldInjection " + result;
     }
 
 }
